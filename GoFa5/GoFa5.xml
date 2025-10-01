@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mujoco>
+  <compiler autolimits="true" balanceinertia="true" angle="radian" coordinate="local"/> <!-- If autolimits “true”, no need to specify that joints>/actuators are limited (inferred from the range) -->
+  <option integrator="implicitfast"/>
+  <option gravity = "0 0 0"/> <!-- 0 0 -9.81 --> 
+  <size memory="2M"/> <!-- size of memory allocated for dynamic arrays in the mjData.arena memory space, in bytes -->
+  
+  <visual>
+    <global azimuth="120" elevation="-20"/> 
+    <!-- azimuth=rotation around z-axis (0 corresponds to looking in the positive x direction); elevation=rotation around a vector parallel to the camera’s X-axis (<0 corresponds to camera up)-->
+    <headlight ambient="0.10000000000000001 0.10000000000000001 0.10000000000000001" diffuse="0.59999999999999998 0.59999999999999998 0.59999999999999998" specular="0 0 0"/>
+    <!--headlight is a directional light centered at the current camera and pointed in the direction in which the camera is looking (in the sense of OpenGL-->
+    <rgba haze="0.14999999999999999 0.25 0.34999999999999998 1"/>
+  </visual>
+  
+  <default>
+    <default class="Gofa/">
+     <material specular="0.5" shininess="0.25"/>
+     <default class="ur5e/type_joint1">
+       <joint range="-3.1415000000000002 3.1415000000000002"/>
+       <general ctrlrange="-3.1415000000000002 3.1415000000000002"/>
+     </default>
+     <default class="Gofa/visual">
+          <geom type="mesh" group="2"/>
+     </default>
+     <default class="Gofa/collision">
+          <geom type="capsule" group="3"/>
+          <default class="Gofa/eef_collision">
+            <geom type="cylinder"/>
+          </default>
+     </default>
+    </default>
+  </default>
+
+  <asset>
+    <!-- texture and material for the ground -->
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3" markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+    <!-- download the robot meshes and define colors -->
+    <material name="Gofa/white" class="Gofa/" rgba="1 1 1 1" />
+    <material name="Gofa/grey" class="Gofa/" rgba="0.27800000000000002 0.27800000000000002 0.27800000000000002 1" />
+    <mesh name="Gofa/base" class="Gofa/" file="collision/base_link.stl" scale="1 1 1"/>
+    <mesh name="Gofa/link1" class="Gofa/" file="collision/link_1.stl" scale="1 1 1"/>
+    <mesh name="Gofa/link2" class="Gofa/" file="collision/link_2.stl" scale="1 1 1"/>
+    <mesh name="Gofa/link3" class="Gofa/" file="collision/link_3.stl" scale="1 1 1"/>
+    <mesh name="Gofa/link4" class="Gofa/" file="collision/link_4.stl" scale="1 1 1"/>
+    <mesh name="Gofa/link5" class="Gofa/" file="collision/link_5.stl" scale="1 1 1"/>
+    <mesh name="Gofa/link6" class="Gofa/" file="collision/link_6.stl" scale="1 1 1"/>
+  </asset>
+  <worldbody>
+    <geom name="floor" pos="0 0 0" size="0 0 0.5" type="plane" material="groundplane"/>
+    <body name="floor" pos="0 0 0">
+    </body>
+    <body name="Gofa/Robot">
+      <body name="Gofa/Base" pos="0 0 0">
+        <inertial pos="-0.0012013793465437 -0.000175191786981708 0.0862146007385352" euler="0 0 0" mass="3.50083457958494" diaginertia="0.0153015257917955 0.0159333503953857 0.0112162302268266"/>
+        <geom name="Gofa/geom_base" class="Gofa/visual" material="Gofa/grey" mesh="Gofa/base" />
+        <body name="Gofa/1st_link" pos="0 0 0.1875" euler="0 0 0">
+          <inertial pos="2.08682453325091e-6 0.0103608399967513 0.0705307203199506" euler="0 0 0" mass="2.76743491139404" diaginertia="0.0115158625894577 0.006494848329231 0.0109446835358581" />
+          <joint name="Gofa/J1" class="ur5e/type_joint1" axis="0 0 1"/>
+          <geom name="Gofa/geom_link1" class="Gofa/visual" material="Gofa/grey" mesh="Gofa/link1" />
+          <body name="Gofa/2st_link" pos="0 -0.085 0.0775" euler="0 0 0">
+            <inertial pos="1.34018352211628E-06 -0.0500118376116071 0.222001399322246" euler="0 0 0" mass="4.28904168670464" diaginertia="0.130524729873898 0.133278449324229 0.00669457974697178" />
+            <joint name="Gofa/J2" class="ur5e/type_joint1" axis="0 1 0"/>
+            <geom name="Gofa/geom_link2" class="Gofa/visual" material="Gofa/grey" mesh="Gofa/link2" />
+            <body name="Gofa/3st_link" pos="0 -0.00100000000000007 0.444" euler="0 0 0">
+	      <inertial pos="0.0128129281453599 0.0944171780907046 0.0247427540642403" euler="0 0 0" mass="3.38333107992875" diaginertia="0.0175626138728642 0.0140230068919562 0.013275205067567" />
+	      <joint name="Gofa/J3" range="-3.926990817 1.4835298642" axis="0 1 0"/>
+	      <geom name="Gofa/geom_link3" class="Gofa/visual" material="Gofa/grey" mesh="Gofa/link3" />
+	      <body name="Gofa/4st_link" pos="0.096 0.0860000000000001 0.11" euler="0 0 0">
+	        <inertial pos="0.160558561602322 0.041976811408979 -2.36623354021859E-07" euler="0 0 0" mass="2.77857535641324" diaginertia="0.00881683095901354 0.0340754175571832 0.0389358932156922" />
+	        <joint name="Gofa/J4" class="ur5e/type_joint1" axis="1 0 0"/>
+	        <geom name="Gofa/geom_link4" class="Gofa/visual" material="Gofa/white" mesh="Gofa/link4" />
+	        <body name="Gofa/5st_link" pos="0.374 0.0744999999999998 0" euler="0 0 0">
+	          <inertial pos="-0.0147152361879962 -0.0785646469392633 0.0427558021601431" euler="0 0 0" mass="3.01105814739001" diaginertia="0.0114597336686444 0.013561904467501 0.0108480119549914" />
+	          <joint name="Gofa/J5" class="ur5e/type_joint1" axis="0 1 0"/>
+	          <geom name="Gofa/geom_link5" class="Gofa/visual" material="Gofa/white" mesh="Gofa/link5" />
+	          <body name="Gofa/6st_link" pos="0.0679999999999995 -0.0744999999999998 0.0800000000000003" euler="0 0 0">
+	            <inertial pos="0.0137506852604966 0.000239804131398652 -0.000341962798940165" euler="0 0 0" mass="0.146500988015653" diaginertia="0.000128977630055306 0 7.65022909768016e-5" />
+	            <joint name="Gofa/J6" range="-4.7123889804 4.7123889804" axis="1 0 0"/>
+	            <geom name="Gofa/geom_link6" class="Gofa/visual" rgba="0.6 0.6 0.6 1" mesh="Gofa/link6" />
+	            <!--<body name="Gofa/gripper" pos="" euler="">
+	              <inertial pos="" euler="" mass="" diaginertia="" />
+	              <geom name="Gofa/geom_link6" class="Gofa/visual" rgba="0.6 0.6 0.6 1" mesh="Gofa/link6" />
+	            </body>-->
+	          </body>
+	        </body>
+	      </body>
+	    </body>
+          </body>
+        </body>
+      </body>
+    </body>  
+  </worldbody>
+  <actuator>
+    <general name="Gofa/shoulder_pan" class="ur5e/type_joint1" joint="Gofa/J1"/>
+    <general name="Gofa/shoulder_lift" class="ur5e/type_joint1" joint="Gofa/J2"/>
+    <general name="Gofa/elbow" ctrlrange="-3.926990817 1.4835298642" joint="Gofa/J3"/>
+    <general name="Gofa/wrist_1" class="ur5e/type_joint1" joint="Gofa/J4"/>
+    <general name="Gofa/wrist_2" class="ur5e/type_joint1" joint="Gofa/J5"/>
+    <general name="Gofa/wrist_3" ctrlrange="-4.7123889804 4.7123889804" joint="Gofa/J6"/>
+  </actuator>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</mujoco>
