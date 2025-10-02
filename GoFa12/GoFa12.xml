@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mujoco model="GoFa12 scene">
+  <compiler autolimits="true" balanceinertia="true" angle="radian" coordinate="local"/>
+  <option integrator="implicitfast"/>
+  <option gravity="0 0 0"/>
+  <size memory="2M"/>
+
+  <visual>
+    <global azimuth="120" elevation="-20"/>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.1 0.1 0.1" specular="0 0 0"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+  </visual>
+
+  <default>
+    <default class="Gofa12/">
+      <material specular="0.5" shininess="0.25"/>
+      <default class="gofa12/type_joint1">
+        <joint range="-3.141592653589793 3.141592653589793"/>
+        <general ctrlrange="-3.141592653589793 3.141592653589793"/>
+      </default>
+
+      <!-- Visuals: draw only (group 2), no collisions -->
+      <default class="Gofa12/visual">
+        <geom type="mesh" group="2" contype="0" conaffinity="0"/>
+      </default>
+
+      <!-- Collisions: collide (group 3). We’ll override type to mesh on each geom. -->
+      <default class="Gofa12/collision">
+        <geom group="3" contype="1" conaffinity="1" rgba="1 0 0 0.35"/>
+        <default class="Gofa12/eef_collision">
+          <geom type="cylinder"/>
+        </default>
+      </default>
+    </default>
+  </default>
+
+  <asset>
+    <!-- skybox / ground -->
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge"
+             rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3" markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+
+    <!-- materials -->
+    <material name="Gofa12/grey"  class="Gofa12/" rgba="0.3450980 0.3647059 0.3686275 1"/>
+    <material name="Gofa12/light" class="Gofa12/" rgba="0.7725490 0.7803922 0.7686275 1"/>
+    <material name="Gofa12/cream" class="Gofa12/" rgba="0.8392157 0.8352941 0.7921569 1"/>
+
+    <!-- VISUAL meshes -->
+    <mesh name="Gofa12_vis/base"  class="Gofa12/" file="visual/base_link.stl" scale="1 1 1"/>
+    <mesh name="Gofa12_vis/link1" class="Gofa12/" file="visual/link_1.stl"   scale="1 1 1"/>
+    <mesh name="Gofa12_vis/link2" class="Gofa12/" file="visual/link_2.stl"   scale="1 1 1"/>
+    <mesh name="Gofa12_vis/link3" class="Gofa12/" file="visual/link_3.stl"   scale="1 1 1"/>
+    <mesh name="Gofa12_vis/link4" class="Gofa12/" file="visual/link_4.stl"   scale="1 1 1"/>
+    <mesh name="Gofa12_vis/link5" class="Gofa12/" file="visual/link_5.stl"   scale="1 1 1"/>
+    <mesh name="Gofa12_vis/link6" class="Gofa12/" file="visual/link_6.stl"   scale="1 1 1"/>
+
+    <!-- COLLISION meshes -->
+    <mesh name="Gofa12_col/base"  class="Gofa12/" file="collision/base_link.stl" scale="1 1 1"/>
+    <mesh name="Gofa12_col/link1" class="Gofa12/" file="collision/link_1.stl"   scale="1 1 1"/>
+    <mesh name="Gofa12_col/link2" class="Gofa12/" file="collision/link_2.stl"   scale="1 1 1"/>
+    <mesh name="Gofa12_col/link3" class="Gofa12/" file="collision/link_3.stl"   scale="1 1 1"/>
+    <mesh name="Gofa12_col/link4" class="Gofa12/" file="collision/link_4.stl"   scale="1 1 1"/>
+    <mesh name="Gofa12_col/link5" class="Gofa12/" file="collision/link_5.stl"   scale="1 1 1"/>
+    <mesh name="Gofa12_col/link6" class="Gofa12/" file="collision/link_6.stl"   scale="1 1 1"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0 0 1.5" dir="0 0 -1" directional="true"/>
+    <geom name="floor" size="0 0 0.5" type="plane" material="groundplane"/>
+
+    <!-- Robot -->
+    <body name="Gofa12/Robot" pos="0 0 0">
+      <body name="Gofa12/Base" pos="0 0 0">
+        <!-- base -->
+        <geom name="Gofa12/base_visual"    class="Gofa12/visual"   material="Gofa12/grey"  mesh="Gofa12_vis/base"/>
+        <geom name="Gofa12/base_collision" class="Gofa12/collision" type="mesh"            mesh="Gofa12_col/base"/>
+
+        <!-- joint_1: origin 0 0 0.338 ; axis=0 0 1 ; range +/- 4.712... -->
+        <body name="Gofa12/1st_link" pos="0 0 0.338" euler="0 0 0">
+          <joint name="Gofa12/J1" class="gofa12/type_joint1" axis="0 0 1"
+                 range="-4.71238898038469 4.71238898038469"/>
+          <geom name="Gofa12/link1_visual"    class="Gofa12/visual"   material="Gofa12/grey" mesh="Gofa12_vis/link1"/>
+          <geom name="Gofa12/link1_collision" class="Gofa12/collision" type="mesh"           mesh="Gofa12_col/link1"/>
+
+          <!-- joint_2: origin 0 0 0 ; axis 0 1 0 -->
+          <body name="Gofa12/2nd_link" pos="0 0 0" euler="0 0 0">
+            <joint name="Gofa12/J2" class="gofa12/type_joint1" axis="0 1 0"/>
+            <geom name="Gofa12/link2_visual"    class="Gofa12/visual"   material="Gofa12/grey" mesh="Gofa12_vis/link2"/>
+            <geom name="Gofa12/link2_collision" class="Gofa12/collision" type="mesh"           mesh="Gofa12_col/link2"/>
+
+            <!-- joint_3: origin 0 0 0.707 ; axis 0 1 0 ; range [-3.92699, 1.48353] -->
+            <body name="Gofa12/3rd_link" pos="0 0 0.707" euler="0 0 0">
+              <joint name="Gofa12/J3" axis="0 1 0"
+                     range="-3.9269908169872414 1.4835298641951802"/>
+              <geom name="Gofa12/link3_visual"    class="Gofa12/visual"   material="Gofa12/grey" mesh="Gofa12_vis/link3"/>
+              <geom name="Gofa12/link3_collision" class="Gofa12/collision" type="mesh"           mesh="Gofa12_col/link3"/>
+
+              <!-- joint_4: origin 0 0 0.110 ; axis 1 0 0 -->
+              <body name="Gofa12/4th_link" pos="0 0 0.110" euler="0 0 0">
+                <joint name="Gofa12/J4" class="gofa12/type_joint1" axis="1 0 0"/>
+                <geom name="Gofa12/link4_visual"    class="Gofa12/visual"   material="Gofa12/light" mesh="Gofa12_vis/link4"/>
+                <geom name="Gofa12/link4_collision" class="Gofa12/collision" type="mesh"            mesh="Gofa12_col/link4"/>
+
+                <!-- joint_5: origin 0.534 0 0 ; axis 0 1 0 -->
+                <body name="Gofa12/5th_link" pos="0.534 0 0" euler="0 0 0">
+                  <joint name="Gofa12/J5" class="gofa12/type_joint1" axis="0 1 0"/>
+                  <geom name="Gofa12/link5_visual"    class="Gofa12/visual"   material="Gofa12/light" mesh="Gofa12_vis/link5"/>
+                  <geom name="Gofa12/link5_collision" class="Gofa12/collision" type="mesh"            mesh="Gofa12_col/link5"/>
+
+                  <!-- joint_6: origin 0.101 0 0.080 ; axis 1 0 0 ; range +/- 4.712... -->
+                  <body name="Gofa12/6th_link" pos="0.101 0 0.080" euler="0 0 0">
+                    <joint name="Gofa12/J6" axis="1 0 0"
+                           range="-4.71238898038469 4.71238898038469"/>
+                    <geom name="Gofa12/link6_visual"    class="Gofa12/visual"   material="Gofa12/cream" mesh="Gofa12_vis/link6"/>
+                    <geom name="Gofa12/link6_collision" class="Gofa12/collision" type="mesh"            mesh="Gofa12_col/link6"/>
+
+                    <!-- tool0 rotation: RPY (0, +90deg, 0) -->
+                    <site name="ee_site" pos="0 0 0" quat="0.70710678 0 0.70710678 0"/>
+
+                    <!-- Optional: axes at tool frame -->
+                    <body name="ee_frame_visual_only" pos="0 0 0" quat="0.70710678 0 0.70710678 0">
+                      <geom type="capsule" fromto="0 0 0 0.05 0 0" rgba="1 0 0 1" size="0.002" contype="0" conaffinity="0"/>
+                      <geom type="capsule" fromto="0 0 0 0 0.05 0" rgba="0 1 0 1" size="0.002" contype="0" conaffinity="0"/>
+                      <geom type="capsule" fromto="0 0 0 0 0 0.05" rgba="0 0 1 1" size="0.002" contype="0" conaffinity="0"/>
+
+                      <body name="tool_frame" pos="0 0 0" quat="1 0 0 0">
+                        <site name="tool_site" pos="0 0 0" quat="1 0 0 0"/>
+                        <geom type="capsule" fromto="0 0 0 0.06 0 0" rgba="1 0 0 1" size="0.003" contype="0" conaffinity="0"/>
+                        <geom type="capsule" fromto="0 0 0 0 0.06 0" rgba="0 1 0 1" size="0.003" contype="0" conaffinity="0"/>
+                        <geom type="capsule" fromto="0 0 0 0 0 0.06" rgba="0 0 1 1" size="0.003" contype="0" conaffinity="0"/>
+                      </body>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <general name="Gofa12/shoulder_pan"  class="gofa12/type_joint1" joint="Gofa12/J1"
+             ctrlrange="-4.71238898038469 4.71238898038469"/>
+    <general name="Gofa12/shoulder_lift" class="gofa12/type_joint1" joint="Gofa12/J2"/>
+    <general name="Gofa12/elbow"         joint="Gofa12/J3"
+             ctrlrange="-3.9269908169872414 1.4835298641951802"/>
+    <general name="Gofa12/wrist_1"       class="gofa12/type_joint1" joint="Gofa12/J4"/>
+    <general name="Gofa12/wrist_2"       class="gofa12/type_joint1" joint="Gofa12/J5"/>
+    <general name="Gofa12/wrist_3"       joint="Gofa12/J6"
+             ctrlrange="-4.71238898038469 4.71238898038469"/>
+  </actuator>
+</mujoco>
