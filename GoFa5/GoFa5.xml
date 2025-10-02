@@ -80,10 +80,22 @@
 	            <inertial pos="0.0137506852604966 0.000239804131398652 -0.000341962798940165" euler="0 0 0" mass="0.146500988015653" diaginertia="0.000128977630055306 0 7.65022909768016e-5" />
 	            <joint name="Gofa/J6" range="-4.7123889804 4.7123889804" axis="1 0 0"/>
 	            <geom name="Gofa/geom_link6" class="Gofa/visual" rgba="0.6 0.6 0.6 1" mesh="Gofa/link6" />
-	            <!--<body name="Gofa/gripper" pos="" euler="">
-	              <inertial pos="" euler="" mass="" diaginertia="" />
-	              <geom name="Gofa/geom_link6" class="Gofa/visual" rgba="0.6 0.6 0.6 1" mesh="Gofa/link6" />
-	            </body>-->
+	            <site name="ee_site" pos="0.0326 0 0" quat="0.7071 0 0.7071 0"/>
+              <body name="ee_frame_visual_only" pos="0.0326 0 0" quat="0.7071 0 0.7071 0">
+                      <geom type="capsule" fromto="0 0 0 0.05 0 0" rgba="1 0 0 1" size="0.002" contype="0" conaffinity="0"/>
+                      <geom type="capsule" fromto="0 0 0 0 0.05 0" rgba="0 1 0 1" size="0.002" contype="0" conaffinity="0"/>
+                      <geom type="capsule" fromto="0 0 0 0 0 0.05" rgba="0 0 1 1" size="0.002" contype="0" conaffinity="0"/>
+                      <!-- The tool is imported by a python code -->
+                      
+                      
+                      <!-- Reference frame attached @ tool tip for screwing (T) -->
+                      <body name="tool_frame" pos="0 0 0" quat="1 0 0 0">
+                        <site name="tool_site" pos="0 0 0" quat="1 0 0 0"/>
+                        <geom type="capsule" fromto="0 0 0 0.06 0 0" rgba="1 0 0 1" size="0.003" contype="0" conaffinity="0"/>
+                        <geom type="capsule" fromto="0 0 0 0 0.06 0" rgba="0 1 0 1" size="0.003" contype="0" conaffinity="0"/>
+                        <geom type="capsule" fromto="0 0 0 0 0 0.06" rgba="0 0 1 1" size="0.003" contype="0" conaffinity="0"/>
+                    </body>
+                  </body>
 	          </body>
 	        </body>
 	      </body>
