@@ -8,9 +8,9 @@
   <visual>
     <global azimuth="120" elevation="-20"/> 
     <!-- azimuth=rotation around z-axis (0 corresponds to looking in the positive x direction); elevation=rotation around a vector parallel to the camera’s X-axis (<0 corresponds to camera up)-->
-    <headlight ambient="0.10000000000000001 0.10000000000000001 0.10000000000000001" diffuse="0.59999999999999998 0.59999999999999998 0.59999999999999998" specular="0 0 0"/>
+     <headlight diffuse="0.6 0.6 0.6" ambient="0.1 0.1 0.1" specular="0 0 0"/>
     <!--headlight is a directional light centered at the current camera and pointed in the direction in which the camera is looking (in the sense of OpenGL-->
-    <rgba haze="0.14999999999999999 0.25 0.34999999999999998 1"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
   </visual>
   
   <default>
@@ -49,6 +49,7 @@
     <mesh name="Gofa/link6" class="Gofa/" file="collision/link_6.stl" scale="1 1 1"/>
   </asset>
   <worldbody>
+    <light pos="0 0 1.5" dir="0 0 -1" directional="true"/>
     <geom name="floor" pos="0 0 0" size="0 0 0.5" type="plane" material="groundplane"/>
     <body name="floor" pos="0 0 0">
     </body>
